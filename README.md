@@ -1,2 +1,2 @@
-# tahmatassutelegrambot
-Tahmatassu API Telegram Bot
+# Tahmatassu receit book Telegram bot
+
