@@ -9,7 +9,7 @@ class Cache():
   it don't need to fetch recipes every single request again and again.
   """
 
-  def __init__(self, data, cache_max_age = 60*5):
+  def __init__(self, data=None, cache_max_age = 60*5):
     """Constructor
     
     Keyword Arguments:
