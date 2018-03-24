@@ -3,6 +3,8 @@
 import time
 import logging
 
+from bot.command import Command
+
 class CommandCache():
   """CommandCache is way to store command results and reuse them later.
   """
@@ -13,7 +15,7 @@ class CommandCache():
     Keyword Arguments:
       cache_max_age {int} -- Cached command max age in seconds (default: {60*5})
     """
-    self.commands = {}
+    self._commands = {}
     self.cache_max_age = cache_max_age
     self.logger = logging.getLogger('telegrambot')
 
@@ -26,14 +28,16 @@ class CommandCache():
     Returns:
       {boolean} -- Return true if command is cached false if not
     """
-    cached_command = self.commands.get(command, False)    
-    
+    cached_command = self._commands.get(command, False)           
+
     if cached_command != False:      
-      return self.commands[command].created + self.cache_max_age < time.time()
-      #TODO: Clean cached command after command is aged..
-    else:
-      return False
-  
+      is_expired = self._commands[command].created + self.cache_max_age < time.time()
+
+      if is_expired:
+        del self._commands[command]
+    
+    return not is_expired and isinstance(cached_command, Command)
+      
   def get(self, command):
     """Return cached command object from the cache
     
@@ -44,7 +48,7 @@ class CommandCache():
      {Command} -- Return Command instance if found, otherwise return None
     """
     self.logger.debug("Fetching cached command: " + command.command)
-    return self.commands.get(command, None)
+    return self._commands.get(command, None)
   
   def get_cached_result(self, command):
     """Return command object cached result
@@ -67,4 +71,7 @@ class CommandCache():
     """
     self.logger.debug("Caching command: " + command.command + str(command.params))
     command.result = result 
-    self.commands[command] = command
+    self._commands[command] = command
+
+  def __len__(self):
+    return len(self._commands)
