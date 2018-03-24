@@ -6,17 +6,22 @@
 Welcome to Tahmatassu Telegram Bot's documentation!
 ===================================================
 
-This is my introduction to the Tahmatassu Telegram Bot project. It's all about cooking recipes
-that I have tried and made by my self during the years.
+This is my introduction to the Tahmatassu Telegram Bot project. It's all about cooking recipes that I have tried and made by my self during the years.
 
-This bot uses puumuki.game-server.cc REST api to fetch recipes from the server and 
-servers them trough Telegram API to the end client. 
+Actual web page can be found from http://puumuki.game-server.cc
 
-Project Stucture
- * bot/* - Python module holding Python code of the project
- * templates/* - Hold markdown templates used by the bot show static messages
- * main.py - Tahmatassu Bot Runner, main executable
- * setting.ini - Tahmatassu Telgeram Bot Settings
+This bot uses web page REST API to fetch recipes from the server and 
+servers them trough Telegram API to the end client at Telegram chat.
+
+Project Structure
+=================
+
+* bot/* - Python module holding Python code of the project
+* templates/* - Hold markdown templates used by the bot show static messages
+* main.py - Tahmatassu Bot Runner, main executable
+* setting.ini - Tahmatassu Telgeram Bot Settings
+
+Poject is provided under MIT license.
 
 .. toctree::
    :maxdepth: 3
