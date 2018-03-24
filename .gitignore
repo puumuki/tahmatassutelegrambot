@@ -104,3 +104,6 @@ tahmatassu.code-workspace
 setting.ini
 settings.ini
 bot/settings.py
+_build/*
+.idea/*
+.idea/vcs.xml

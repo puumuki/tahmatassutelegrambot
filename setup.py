@@ -13,7 +13,7 @@ setup(
     license="MIT",
     author="Teemu Puukko",
     packages=find_packages(),
-    install_requires=[],
+    install_requires=['requests'],
     long_description=long_description,
     classifiers=[
         "Programming Language :: Python",
