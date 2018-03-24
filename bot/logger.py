@@ -2,7 +2,9 @@
 """
 import logging
 
-logger = logging.getLogger('telegrambot')
+LOGGER_NAME = 'telegrambot'
+
+logger = logging.getLogger(LOGGER_NAME)
 logger.setLevel(logging.INFO)
 
 # create file handler which logs even debug messages
