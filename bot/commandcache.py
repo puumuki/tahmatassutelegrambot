@@ -28,6 +28,7 @@ class CommandCache():
     Returns:
       {boolean} -- Return true if command is cached false if not
     """
+    is_expired = False
     cached_command = self._commands.get(command, False)           
 
     if cached_command != False:      
