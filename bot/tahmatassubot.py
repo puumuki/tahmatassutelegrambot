@@ -15,6 +15,7 @@ from bot.command import Command
 from bot.commandcache import CommandCache
 from bot.cache import Cache
 from bot import logger
+from bot.logger import LOGGER_NAME
 
 from bot.settings import TOKEN
 
@@ -37,7 +38,7 @@ class TahmaTassuBot(TelegramBot):
     self._receipts_cache = Cache()
     self._search_cache = CommandCache()
     self._tahmatassu_base_url = tahmatassu_base_url
-    self.logger = logging.getLogger('telegrambot') 
+    self.logger = logging.getLogger(LOGGER_NAME) 
 
   def get_receipts(self):
     """Fetch receipts from Tahmatassu API.
@@ -171,7 +172,7 @@ class TahmaTassuBot(TelegramBot):
       params = text.split(' ')
       receipt_number = params[1] 
       return int(receipt_number)
-    except ValueError:
+    except (ValueError, IndexError) as e:
       return None
 
   def get_receipt(self, text):
