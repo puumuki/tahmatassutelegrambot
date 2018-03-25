@@ -8,7 +8,7 @@ except IOError:
 
 setup(
     name="Tahmatassubot",
-    version="1.0.0",
+    version="1.1.0",
     description="Tahmatassu Telegram Bot",
     license="MIT",
     author="Teemu Puukko",

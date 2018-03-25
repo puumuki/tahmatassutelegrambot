@@ -14,6 +14,7 @@ import logging
 import os
 import re
 
+from bot.logger import LOGGER_NAME
 from bot.settings import LONG_POLL_TIMEOUT
 from bot.settings import TOKEN
 from bot.settings import TELEGRAM_SERVER_URL
@@ -62,7 +63,7 @@ class TelegramBot(object):
     self.token = token
     self.url = TELEGRAM_SERVER_URL.format(token)
     
-    self.logger = logging.getLogger('telegrambot')
+    self.logger = logging.getLogger(LOGGER_NAME)
     self.logger.info( self.url )
 
   def get_url(self, url):

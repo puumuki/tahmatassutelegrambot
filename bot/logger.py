@@ -1,14 +1,18 @@
 """Hold Tahmamatassu Telegram bot's logging settings
 """
 import logging
+from logging.handlers import RotatingFileHandler
 
-LOGGER_NAME = 'telegrambot'
+LOGGER_NAME = 'telegrambot.log'
 
 logger = logging.getLogger(LOGGER_NAME)
 logger.setLevel(logging.INFO)
 
 # create file handler which logs even debug messages
-fh = logging.FileHandler('telegrambot.log')
+FILE_SIZE = 1000 * 10 ** 3  
+BACK_UP_COUNT = 10
+
+fh = RotatingFileHandler(LOGGER_NAME, 'a', FILE_SIZE, BACK_UP_COUNT)
 fh.setLevel(logging.INFO)
 
 # create console handler with a higher log level
