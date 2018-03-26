@@ -38,7 +38,8 @@ class TahmaTassuBot(TelegramBot):
     self._receipts_cache = Cache()
     self._search_cache = CommandCache()
     self._tahmatassu_base_url = tahmatassu_base_url
-    self.logger = logging.getLogger(LOGGER_NAME) 
+    self.logger = logging.getLogger(LOGGER_NAME)
+    
 
   def get_receipts(self):
     """Fetch receipts from Tahmatassu API.
@@ -188,7 +189,7 @@ class TahmaTassuBot(TelegramBot):
     receipts = self.get_receipts()
     
     if receipt_number and receipt_number > 0 and receipt_number <= len(receipts):  
-      result =  self.cleanMarkdown( receipts[receipt_number - 1].get('markdown') )
+      result =  self.clean_markdown( receipts[receipt_number - 1].get('markdown') )
       self.logger.info( result )
       return result
     else:
