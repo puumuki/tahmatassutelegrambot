@@ -235,9 +235,8 @@ class TelegramBot(object):
 
     for line in result.split('\n'):
 
-      if line.count('*') == 1:
-        print( str(line.count('*')) + ":"+line )
-        last_result += line.replace('*','-')
+      if line.count('*') == 1: 
+        last_result += line.replace('*','-') + '\n'
       else:
         last_result += line + '\n'
 
