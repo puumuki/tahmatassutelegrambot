@@ -15,6 +15,8 @@ import os
 import re
 
 from bot.logger import LOGGER_NAME
+from bot.logger import MESSAGE_LOGGER
+
 from bot.settings import LONG_POLL_TIMEOUT
 from bot.settings import TOKEN
 from bot.settings import TELEGRAM_SERVER_URL
@@ -62,7 +64,8 @@ class TelegramBot(object):
     self.bot_name = bot_name
     self.token = token
     self.url = TELEGRAM_SERVER_URL.format(token)
-    
+    self._chats = {}
+    self.msg_logger = logging.getLogger(MESSAGE_LOGGER)
     self.logger = logging.getLogger(LOGGER_NAME)
     self.logger.info( self.url )
 
@@ -74,10 +77,26 @@ class TelegramBot(object):
     Returns:
       str -- Return HTTP request content (JSON data)
     """
-    try:
+    try:      
+      self.msg_logger.info( url )
+
+      response_content = None
       response = requests.get(url)
-      content = response.content.decode("utf8")
-      return content
+      
+      self.msg_logger.debug("RESPONSE:")
+      self.msg_logger.debug( response.status_code )
+
+      if response.status_code == 200:      
+        response_content = response.content.decode("utf8")
+      else:
+        self.msg_logger.error("RESPONSE:")
+        self.msg_logger.error( response.status_code )
+        self.msg_logger.error( response.content.decode("utf8") )
+
+      self.msg_logger.debug( response_content )
+
+      return response_content
+
     except requests.exceptions.ConnectionError as error:
       self.logger.error("Connection error: " + str(error))
       self.logger.info("Retrying request after couple seconds")
@@ -182,11 +201,21 @@ class TelegramBot(object):
       try:
         text = update["message"]["text"]
         chat = update["message"]["chat"]["id"]
-        self.send_message(text, chat)
+
+        last_time_sended = self._chats.get(chat, 1)
+
+        #Make sure that we don't spam Telegram API.. this way every one using bot waits..
+        #TODO: Find better way to do this..
+        if ( last_time_sended - time.time() ) < 1:
+          time.sleep( 1 )
+
+        #Keep track when message was sended to particular chat.  
+        self._chats[chat] = time.time()        
+        self.send_message(text, chat)        
       except Exception as e:
         self.logger.error(e)
 
-  def cleanMarkdown(self, markdown):
+  def clean_markdown(self, markdown):
     """Clean markdown going to Telegram API
     
     Arguments:
@@ -197,7 +226,22 @@ class TelegramBot(object):
     """
     #Clean up links from the markdown, these don't go trough Telegram Bot API
     regex = r"!\[(.*?)\]\(.*?\)" 
-    return re.sub(regex, '', markdown)
+    result = re.sub(regex, '', markdown)
+
+    #Replace single '*' letters with '-' marker
+    #Telegram API is expecting to have bolded text with two '*' marker surraunding
+    #the bolded text and gives and error if there is uneven amount of '*' markers around.
+    last_result = ''
+
+    for line in result.split('\n'):
+
+      if line.count('*') == 1:
+        print( str(line.count('*')) + ":"+line )
+        last_result += line.replace('*','-')
+      else:
+        last_result += line + '\n'
+
+    return last_result.strip()
 
   def run(self):
     """Calling this function start the actual TelegramBot.
