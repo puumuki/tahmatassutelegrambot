@@ -35,6 +35,7 @@ class TahmaTassuBot(TelegramBot):
     super(TahmaTassuBot, self).__init__(token=token, bot_name=bot_name)
     self.welcomeTmp = self.template('tahmatassuwelcome.md')
     self.ohjeTmp = self.template('tahmatassuohje.md')
+    self.aboutTmp = self.template('about.md')
     self._receipts_cache = Cache()
     self._search_cache = CommandCache()
     self._tahmatassu_base_url = tahmatassu_base_url
@@ -214,13 +215,15 @@ class TahmaTassuBot(TelegramBot):
         if command.command in ['/list','/listaa', '/reseptit']:
           titles = self.list_receipts(command)
           self.send_message("Reseptit\n" + str(titles), chat)
+        elif command.command in ['/about','/minusta']:
+          self.send_message(self.aboutTmp, chat, parse_mode=ParseMode.MARKDOWN)                          
         elif text in ['/help','/?','/ohje']:
           self.send_message(self.ohjeTmp, chat, parse_mode=ParseMode.MARKDOWN)
         elif "/get" in text or "/hae" in text:
           receipt = self.get_receipt(text)
           self.send_message(receipt, chat)
         elif text == "/start":
-          self.send_message(self.welcomeTmp, chat, parse_mode=ParseMode.MARKDOWN)              
+          self.send_message(self.welcomeTmp, chat, parse_mode=ParseMode.MARKDOWN)          
         else:
           self.send_message('meep', chat)
       except KeyError:
